@@ -17,7 +17,7 @@ struct ship
     direction d;
 };
 
-//Creates the game field as a matrix
+///Creates the game field as a matrix
 int** create_sea()
 {
     int** sea = new int*[size];
@@ -27,6 +27,7 @@ int** create_sea()
     return sea;
 }
 
+///Free up allocated memory
 void remove_sea(int** sea)
 {
     for (int i = 0; i < size; ++i) {
@@ -34,6 +35,7 @@ void remove_sea(int** sea)
     }
 }
 
+///Check ship's enabled position in the board 
 static bool check_ship_pos(int** sea, const ship& s)
 {
     assert(sea);
@@ -61,6 +63,7 @@ static bool check_ship_pos(int** sea, const ship& s)
     return true;
 }
 
+///Changes values of a ship bottom-side 
 static void fill_bottom(int** sea, const ship& s, bool full = true)
 {
     int i = 0;
@@ -74,6 +77,7 @@ static void fill_bottom(int** sea, const ship& s, bool full = true)
     }
 }
 
+///Changes values of a ship bottom-side 
 static void fill_top(int** sea, const ship& s, bool full = true)
 {
     int i = 0;
@@ -87,6 +91,7 @@ static void fill_top(int** sea, const ship& s, bool full = true)
     }
 }
 
+///Changes values of a ship left-side 
 static void fill_left(int** sea, const ship& s, bool full = true)
 {
     int i = 0;
@@ -100,6 +105,7 @@ static void fill_left(int** sea, const ship& s, bool full = true)
     }
 }
 
+///Changes values of a ship right-side 
 static void fill_right(int** sea, const ship& s, bool full = true)
 {
     int i = 0;
@@ -113,6 +119,7 @@ static void fill_right(int** sea, const ship& s, bool full = true)
     }
 }
 
+///Changes values around horizontal oriented ships
 static void fill_horizontal(int** sea, const ship& s)
 {
     if (s.x != 0 && s.y != 0 && s.x + s.l < size) {
@@ -135,6 +142,7 @@ static void fill_horizontal(int** sea, const ship& s)
     }
 }
 
+///Changes values around vertical oriented ships
 static void fill_vertical(int** sea, const ship& s)
 {
     if (s.x != 0 && s.y != 0 && s.y + s.l < size ) {
@@ -157,6 +165,7 @@ static void fill_vertical(int** sea, const ship& s)
     }
 }
 
+///Fill sea around ships 
 static void fill_around(int** sea, const ship& s)
 {
     assert(sea);
@@ -169,7 +178,7 @@ static void fill_around(int** sea, const ship& s)
     }
 }
 
-//Input X, Y coordinats
+///Input X, Y coordinats and ship direction
 static void input_coords(int& x, int& y, direction& dir, bool shoot = false)
 {
     int d = 0;
@@ -188,7 +197,7 @@ static void input_coords(int& x, int& y, direction& dir, bool shoot = false)
     }
 }
 
-//Shows the game fild
+///Shows the game fild
 void show_sea(int** sea)
 {
     for(int i = 0; i < size; ++i){
@@ -199,7 +208,7 @@ void show_sea(int** sea)
     }
 }
 
-//Creates an one-dimensional ship
+///Creates an one-dimensional ship
 ship create_one_dim_ship(int** sea)
 {
     assert(sea);
@@ -216,10 +225,11 @@ ship create_one_dim_ship(int** sea)
         input_coords(x, y, s.d);
     }
     sea[x][y] = 1;
+    //show_sea(sea);
     return s;
 }
 
-//Creates three two-dimensional ship
+///Creates a two-dimensional ship
 ship create_two_dim_ship(int** sea)
 {
     assert(sea);
@@ -244,12 +254,12 @@ ship create_two_dim_ship(int** sea)
         } else {
             std::cerr << "";
         }
-        //show_sea(sea);
+        show_sea(sea);
     }
        return s;
 }
 
-//Creates two three-dimensional ships
+///Creates a three-dimensional ships
 ship create_three_dim_ship (int** sea)
 {
     int x = 0;
@@ -272,12 +282,12 @@ ship create_three_dim_ship (int** sea)
     } else{
         std::cerr << " ";
     }
-    //show_sea(sea);
+    show_sea(sea);
     return s;
 }
 
 
-//Creates a four-dimensional ship
+///Creates a four-dimensional ship
 ship create_four_dim_ship (int** sea)
 {
     int x = 0;
@@ -298,16 +308,17 @@ ship create_four_dim_ship (int** sea)
        (sea[x][y] = 1) && (sea[x + 1][y] = 1) && (sea[x + 2][y] = 1)
             && (sea[x + 3][y] = 1);
       }
-    //show_sea(sea);
+    show_sea(sea);
     return s;
 }
 
-//Fill ships in sea
+///Fill ships in sea
 void fill_sea (int** sea)
 {
     for (int i = 0; i < 4; ++i) {
         ship s = create_one_dim_ship(sea);
         fill_around(sea, s);
+        show(sea);
     }
     for (int i = 0; i < 3; ++i) {
         ship s = create_two_dim_ship(sea);
@@ -323,7 +334,7 @@ void fill_sea (int** sea)
     }
 }
 
-
+///Shoots to apropriate place in the sea given by coordinates
 void shoot(int** sea)
 {
    int x = 0;
