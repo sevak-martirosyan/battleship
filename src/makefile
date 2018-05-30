@@ -1,11 +1,9 @@
 SOURCES = battle.cpp main.cpp
 OBJDIR = ../obj
 OBJECTS = $(SOURCES:.cpp=.o)
-MOVED_OBJECTS = $(addprefix ../$(OBJDIR/,$(OBJECTS))
-MOVED_OBJECTS = $(addprefix ../$(OBJDIR)/,$(OBJECTS))
-INCLUDEPATH = ../
+MOVED_OBJECTS = $(addprefix ./$(OBJDIR)/,$(OBJECTS))
 CC = g++
-CPPFLAGS = -std=c++14 -c -I$(INCLUDEPATH) 
+CPPFLAGS = -std=c++14 -c -g
 
 all: $(OBJECTS) $(SOURCES)
 	mv *.o $(OBJDIR)
