@@ -17,7 +17,10 @@ struct ship
     direction d;
 };
 
-///Creates the game field as a matrix
+/**
+ * @brief  Function creates the game field as a two-dimensional dynamic array. 
+ * @return Function returns two-dimensional array initialized with zeros.
+ **/
 int** create_sea()
 {
     int** sea = new int*[size];
@@ -26,8 +29,11 @@ int** create_sea()
     }
     return sea;
 }
-
-///Free up allocated memory
+ 
+/**
+ * @brief  Function free up allocated memory.
+ * @param  sea is a two-dimensional array. 
+ **/                       
 void remove_sea(int** sea)
 {
     for (int i = 0; i < size; ++i) {
@@ -35,7 +41,13 @@ void remove_sea(int** sea)
     }
 }
 
-///Check ship's enabled position in the board 
+  
+/**
+ * @brief   Function checks ship's position enabled or not.
+ * @param   sea is a two-dimensional array.
+ * @param   s   is ship-type struct.
+ * @return  Function return true if ship position is enabled, false otherwise.
+ **/ 
 static bool check_ship_pos(int** sea, const ship& s)
 {
     assert(sea);
@@ -63,7 +75,11 @@ static bool check_ship_pos(int** sea, const ship& s)
     return true;
 }
 
-///Changes values of a ship bottom-side 
+ /**
+ * @brief  Function changes of a ship bottom-side values to 2.
+ * @param  sea is a two-dimensional array.
+ * @param  s   is a ship-type struct.
+ **/ 
 static void fill_bottom(int** sea, const ship& s, bool full = true)
 {
     int i = 0;
@@ -77,7 +93,11 @@ static void fill_bottom(int** sea, const ship& s, bool full = true)
     }
 }
 
-///Changes values of a ship bottom-side 
+ /**
+ * @brief  Function changes of a ship top-side values to 2.
+ * @param  sea is a two-dimensional array. 
+ * @param  s   is a ship-type struct.
+ **/ 
 static void fill_top(int** sea, const ship& s, bool full = true)
 {
     int i = 0;
@@ -91,7 +111,11 @@ static void fill_top(int** sea, const ship& s, bool full = true)
     }
 }
 
-///Changes values of a ship left-side 
+ /**
+ * @brief  Function changes of a ship left-side values to 2.
+ * @param  sea is a two-dimensional array.
+ * @param  s   is a ship-type struct.
+ **/ 
 static void fill_left(int** sea, const ship& s, bool full = true)
 {
     int i = 0;
@@ -105,7 +129,11 @@ static void fill_left(int** sea, const ship& s, bool full = true)
     }
 }
 
-///Changes values of a ship right-side 
+ /**
+ * @brief  Function changes of a ship right-side values to 2.
+ * @param  sea is a two-dimensional array.
+ * @param  s   is a ship-type struct.
+ **/ 
 static void fill_right(int** sea, const ship& s, bool full = true)
 {
     int i = 0;
@@ -119,7 +147,11 @@ static void fill_right(int** sea, const ship& s, bool full = true)
     }
 }
 
-///Changes values around horizontal oriented ships
+ /**                                                              
+ * @brief  Function changes values around horizontally oriented ships.
+ * @param  sea is a two-dimensional array.
+ * @param  s   is a ship-type struct.
+ **/ 
 static void fill_horizontal(int** sea, const ship& s)
 {
     if (s.x != 0 && s.y != 0 && s.x + s.l < size) {
@@ -142,7 +174,11 @@ static void fill_horizontal(int** sea, const ship& s)
     }
 }
 
-///Changes values around vertical oriented ships
+/**
+ * @brief  Function changes values around vertically oriented ships.
+ * @param  sea is a two-dimensional array.
+ * @param  s   is a ship-type struct.
+ **/ 
 static void fill_vertical(int** sea, const ship& s)
 {
     if (s.x != 0 && s.y != 0 && s.y + s.l < size ) {
@@ -165,7 +201,12 @@ static void fill_vertical(int** sea, const ship& s)
     }
 }
 
-///Fill sea around ships 
+
+ /**
+ * @brief  Function fill sea around ships.
+ * @param  sea is a two-dimensional array.
+ * @param  s   is a ship-type struct.
+ **/ 
 static void fill_around(int** sea, const ship& s)
 {
     assert(sea);
@@ -178,7 +219,12 @@ static void fill_around(int** sea, const ship& s)
     }
 }
 
-///Input X, Y coordinats and ship direction
+ /**
+ * @brief  Function input coordinats and direction from command line.
+ * @param  x is an integer pass by reference from command line.
+ * @param  y is an integer pass by reference from command line.
+ * @param  dir is a direction type enum. 
+ **/ 
 static void input_coords(int& x, int& y, direction& dir, bool shoot = false)
 {
     int d = 0;
@@ -197,7 +243,10 @@ static void input_coords(int& x, int& y, direction& dir, bool shoot = false)
     }
 }
 
-///Shows the game fild
+/**
+ * @brief  Function shows the game fild.
+ * @param  sea is a two-dimensional array. 
+ **/ 
 void show_sea(int** sea)
 {
     for(int i = 0; i < size; ++i){
@@ -208,7 +257,11 @@ void show_sea(int** sea)
     }
 }
 
-///Creates an one-dimensional ship
+/**
+ * @brief  Function creates an one-dimensional ship.
+ * @param  sea is a two-dimensional array.
+ * @return Function returns ship-type s.
+ **/ 
 ship create_one_dim_ship(int** sea)
 {
     assert(sea);
@@ -228,8 +281,12 @@ ship create_one_dim_ship(int** sea)
     //show_sea(sea);
     return s;
 }
-
-///Creates a two-dimensional ship
+ 
+/**
+ * @brief  Function creates a two-dimensional ship.
+ * @param  sea is a two-dimensional array.
+ * @return Function returns ship-type s.
+ **/ 
 ship create_two_dim_ship(int** sea)
 {
     assert(sea);
@@ -259,7 +316,11 @@ ship create_two_dim_ship(int** sea)
        return s;
 }
 
-///Creates a three-dimensional ships
+/**
+ * @brief  Function creates a three-dimensional ship.
+ * @param  sea is a two-dimensional array.
+ * @return Function returns ship-type s.
+ **/  
 ship create_three_dim_ship (int** sea)
 {
     int x = 0;
@@ -286,8 +347,11 @@ ship create_three_dim_ship (int** sea)
     return s;
 }
 
-
-///Creates a four-dimensional ship
+/**
+ * @brief  Function creates a four-dimensional ship.
+ * @param  sea is a two-dimensional array.
+ * @return Function returns ship-type s.
+ **/  
 ship create_four_dim_ship (int** sea)
 {
     int x = 0;
@@ -313,6 +377,10 @@ ship create_four_dim_ship (int** sea)
 }
 
 ///Fill ships in sea
+ /**
+ * @brief  Function ated memory.
+ * @param  sea is a two-dimensional array. 
+ **/ 
 void fill_sea (int** sea)
 {
     for (int i = 0; i < 4; ++i) {
@@ -335,6 +403,10 @@ void fill_sea (int** sea)
 }
 
 ///Shoots to apropriate place in the sea given by coordinates
+ /**
+ * @brief  Function ated memory.
+ * @param  sea is a two-dimensional array. 
+ **/ 
 void shoot(int** sea)
 {
    int x = 0;

@@ -20,6 +20,7 @@ all: $(OBJECTS)
 
 .PHONY : clean
 clean:
-	rm -rf $(BINDIR)/$(EXECUTABLE) $(MOVED_OBJECTS)
+	rm -rf $(BINDIR) $(OBJDIR) 
 	$(foreach subdir,$(SUBDIRS), cd $(subdir); make clean; cd ../;)
+    
 
