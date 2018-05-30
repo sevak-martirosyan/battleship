@@ -238,7 +238,7 @@ ship create_two_dim_ship(int** sea)
     int d = 0;
     ship s;
     s.l = 2;
-    std::cout << "DRAW THREE TWO-DIMENSIONAL SHIPS" << std::endl;
+    std::cout << "DRAW A TWO-DIMENSIONAL SHIPS" << std::endl;
     std::cout << "INPUT DIRECTION (0 -> H | 1 -> V):  ";
     std::cin >> d;
     s.d = static_cast<direction>(d);
@@ -267,7 +267,7 @@ ship create_three_dim_ship (int** sea)
     int d = 0;
     ship s;
     s.l = 3;
-    std::cout << "DRAW TWO THREE-DIMENSIONAL SHIPS" << std::endl;
+    std::cout << "DRAW A THREE-DIMENSIONAL SHIPS" << std::endl;
     std::cout << "INPUT DIRECTION (0 -> H | 1 -> V):  ";
     std::cin >> d;
     s.d = static_cast<direction>(d);
@@ -318,7 +318,7 @@ void fill_sea (int** sea)
     for (int i = 0; i < 4; ++i) {
         ship s = create_one_dim_ship(sea);
         fill_around(sea, s);
-        show(sea);
+        show_sea(sea);
     }
     for (int i = 0; i < 3; ++i) {
         ship s = create_two_dim_ship(sea);

@@ -7,7 +7,7 @@ int** sea = nullptr;
 
 void signalHandler(int sig)
 {
-   std::cout << "\033[1;31mCLOSE THE GAME\033[0m" << std::endl;
+   std::cout << "\033[1;31m CLOSE THE GAME\033[0m" << std::endl;
    remove_sea(sea);
    exit(0);
 }
