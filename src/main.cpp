@@ -5,7 +5,7 @@
 
 int** sea = nullptr;
 
-void signalHandler(int sig)
+void signal_handler(int sig)
 {
    std::cout << "\033[1;31m CLOSE THE GAME\033[0m" << std::endl;
    remove_sea(sea);
@@ -15,7 +15,7 @@ void signalHandler(int sig)
 int main()
 {
     sea = create_sea();
-    signal(SIGINT, signalHandler);
+    signal(SIGINT, signal_handler);
 
     fill_sea(sea);
     shoot(sea);

@@ -8,11 +8,11 @@ if ((x)) {\
     std::cout << "FAILED  " << __FUNCTION__ << std::endl;\
 }
 
-#include "battle.hpp"
+#include "../src/battle.hpp"
 
 int** sea = nullptr;
 
-void signalHandler (int sig)
+void signal_handler (int sig)
 {
    remove_sea(sea);
    exit(0);
@@ -24,7 +24,7 @@ void check_ship_position (int** sea)
 
 void check_create_sea (int** tmp_sea)
 {
-    tmp_sea == create_sea();
+    tmp_sea = create_sea();
     TEST(tmp_sea != nullptr);
 }
 
@@ -40,9 +40,9 @@ void check_remove_sea (int** tmp_sea)
 
 int main()
 {
-    signal (SIGINT, signalHandler);
+    signal (SIGINT, signal_handler);
     try {
-        int** tmp_sea == nullptr;
+        int** tmp_sea = nullptr;
         check_create_sea(tmp_sea);
         check_remove_sea(tmp_sea);
     } catch(...) {
