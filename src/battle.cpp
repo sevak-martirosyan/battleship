@@ -152,11 +152,11 @@ static void fill_right(int** sea, const ship& s, bool full = true)
  **/
 static void fill_horizontal(int** sea, const ship& s)
 {
-    if (s.x != 0 && s.y != 0 && s.x + s.l < size - 1) {
+    if (s.x != 0 && s.y != 0 && s.y + s.l < size - 1 && s.x < size - 1) {
         fill_top(sea, s);
         fill_bottom(sea, s);
         sea[s.x][s.y - 1] = 2;
-        sea[s.x][s.y + s.l + 1] = 2;
+        sea[s.x][s.y + s.l] = 2;
     } else if (s.x == 0 && s.y == 0) {
         sea[s.x][s.y + s.l + 1] = 2;
         fill_bottom(sea, s, false);
@@ -169,6 +169,23 @@ static void fill_horizontal(int** sea, const ship& s)
     } else if (s.x == size && s.y + s.l == size) {
         sea[s.x][ s.y - 1] = 2;
         fill_top(sea, s, false);
+    } else if (s.x == 0) {
+        fill_bottom(sea, s);
+        sea[s.x][s.y - 1] = 2;
+        sea[s.x][s.y + s.l] = 2;
+    } else if (s.x == size - 1) {
+        fill_top(sea, s);
+        if (!s.y == 0)
+            sea[s.x][s.y - 1] = 2;
+        sea[s.x][s.y + s.l] = 2;
+    } else if (s.y == 0) {
+        fill_bottom(sea, s, false);
+        fill_top(sea, s, false);
+        sea[s.x][s.y + s.l] = 2;
+    } else if (s.y + s.l == size - 1) {
+        fill_bottom(sea, s, false);
+        fill_top(sea, s, false);
+        sea[s.x][s.y - 1] = 2;
     }
 }
 
@@ -179,7 +196,7 @@ static void fill_horizontal(int** sea, const ship& s)
  **/
 static void fill_vertical(int** sea, const ship& s)
 {
-    if (s.x != 0 && s.y != 0 && s.y + s.l < size - 1 && s.x < size - 1) {
+    if (s.x != 0 && s.y != 0 && s.y < size - 1 && s.x + s.l < size - 1) {
         fill_left(sea, s);
         fill_right(sea, s);
         sea[s.x - 1][s.y] = 2;
@@ -200,10 +217,18 @@ static void fill_vertical(int** sea, const ship& s)
         fill_right(sea, s, false);
         fill_left(sea, s, false);
         sea[s.x + s.l][s.y] = 2;
-    } else if (s.x == size - 1 && s.d == NONE) {
+    } else if (s.x  + s.l == size) {
         fill_right(sea, s);
         fill_left(sea, s);
         sea[s.x - 1][s.y] = 2;
+    } else if (s.y == 0) {
+        fill_right(sea, s);
+        sea[s.x - 1][s.y] = 2;
+        sea[s.x + s.l][s.y] = 2;
+    } else if (s.y == size - 1) {
+        fill_left(sea, s);
+        sea[s.x - 1][s.y] = 2;
+        sea[s.x + s.l][s.y] = 2;
     }
 }
 
@@ -230,21 +255,21 @@ static void fill_around(int** sea, const ship& s)
  * @param  y is an integer pass by reference from command line.
  * @param  dir is a direction type enum. 
  **/
-static void input_coords(int& x, int& y, direction& dir, bool shoot = false)
+static void input_ship_coords(ship& sh, bool shoot = false)
 {
     int d = 0;
     std::cout << "Input X: ";
-    std::cin >> x;
+    std::cin >> sh.x;
     std::cout << "Input Y: ";
-    std::cin >> y;
+    std::cin >> sh.y;
     if (!shoot) {
         std::cout << "Input Direction: ";
         std::cin >> d;
-        dir = static_cast<direction>(d);
+        sh.d = static_cast<direction>(d);
     }
-    if (x < 0 || x > 9 || y < 0 || y > 9) {
+    if (sh.x < 0 || sh.x > 9 || sh.y < 0 || sh.y > 9) {
         std::cout << "INPUT VALID COORDINATES" << std::endl;
-        input_coords(x, y, dir);
+        input_ship_coords(sh);
     }
 }
 
@@ -270,19 +295,15 @@ void show_sea(int** sea)
 ship create_one_dim_ship(int** sea)
 {
     assert(sea);
-    int x= 0;
-    int y = 0;
     ship s;
     s.d = NONE;
     s.l = 1;
     std::cout << "DRAW ONE-DIMENSIONAL SHIP" << std::endl;
-    input_coords(x, y, s.d, true);
-    s.x = x;
-    s.y = y;
+    input_ship_coords(s, true);
     while (!check_ship_pos(sea, s)) {
-        input_coords(x, y, s.d, true);
+        input_ship_coords(s, false);
     }
-    sea[x][y] = 1;
+    sea[s.x][s.y] = 1;
     return s;
 }
 
@@ -294,8 +315,6 @@ ship create_one_dim_ship(int** sea)
 ship create_two_dim_ship(int** sea)
 {
     assert(sea);
-    int x = 0;
-    int y = 0;
     int d = 0;
     ship s;
     s.l = 2;
@@ -303,20 +322,20 @@ ship create_two_dim_ship(int** sea)
     std::cout << "INPUT DIRECTION (0 -> H | 1 -> V):  ";
     std::cin >> d;
     s.d = static_cast<direction>(d);
-    if (HOR == s.d) {
-        input_coords(x, y, s.d, true);
-        if (check_ship_pos(sea, s)) {
-            sea[x][y] = 1;
-            sea[x][y + 1] = 1;
-        } else if (VERT == s.d) {
-            input_coords(x, y, s.d, true);
-            sea[x][y] = 1;
-            sea[x + 1][y] = 1;
-        } else {
-            std::cerr << "";
-        }
+    input_ship_coords(s, true);
+    while (!check_ship_pos(sea, s)){
+        input_ship_coords(s, true);
     }
-       return s;
+    if (HOR == s.d) {
+        sea[s.x][s.y] = 1;
+        sea[s.x][s.y + 1] = 1;
+    } else if (VERT == s.d) {
+        sea[s.x][s.y] = 1;
+        sea[s.x + 1][s.y] = 1;
+    } else {
+        std::cerr << "";
+    }
+    return s;
 }
 
 /**
@@ -326,8 +345,6 @@ ship create_two_dim_ship(int** sea)
  **/
 ship create_three_dim_ship (int** sea)
 {
-    int x = 0;
-    int y = 0;
     int d = 0;
     ship s;
     s.l = 3;
@@ -335,14 +352,18 @@ ship create_three_dim_ship (int** sea)
     std::cout << "INPUT DIRECTION (0 -> H | 1 -> V):  ";
     std::cin >> d;
     s.d = static_cast<direction>(d);
+    input_ship_coords(s, true);
+    while (!check_ship_pos(sea, s)){
+        input_ship_coords(s, true);
+    }
     if (HOR == s.d) {
-        input_coords(x, y, s.d, true);
-        (sea[x][y] = 1) && (sea[x][y + 1] = 1)
-            && (sea[x][y + 2] = 1);
+        sea[s.x][s.y] = 1;
+        sea[s.x][s.y + 1] = 1;
+        sea[s.x][s.y + 2] = 1;
     } else if (VERT == s.d) {
-        input_coords(x, y, s.d, true);
-        (sea[x][y] = 1) && (sea[x + 1][y] = 1)
-            && (sea[x + 2][y] = 1);
+        sea[s.x][s.y] = 1;
+        sea[s.x + 1][s.y] = 1;
+        sea[s.x + 2][s.y] = 1;
     } else{
         std::cerr << " ";
     }
@@ -357,8 +378,6 @@ ship create_three_dim_ship (int** sea)
  **/
 ship create_four_dim_ship (int** sea)
 {
-    int x = 0;
-    int y = 0;
     int d = 0;
     ship s;
     s.l = 4;
@@ -366,15 +385,21 @@ ship create_four_dim_ship (int** sea)
     std::cout << "INPUT DIRECTION (0 -> H | 1 -> V):  ";
     std::cin >> d;
     s.d = static_cast<direction>(d);
+    input_ship_coords(s, true);
+    while (!check_ship_pos(sea, s)){
+        input_ship_coords(s, true);
+    }
     if (HOR == s.d) {
-        input_coords(x, y, s.d, true);
-        (sea[x][y] = 1) && (sea[x][y + 1] = 1) && (sea[x][y + 2] = 1)
-            && (sea[x][y + 3] = 1);
+        sea[s.x][s.y] = 1;
+        sea[s.x][s.y + 1] = 1;
+        sea[s.x][s.y + 2] = 1;
+        sea[s.x][s.y + 3] = 1;
     } else if (VERT == d) {
-       input_coords(x, y, s.d, true);
-       (sea[x][y] = 1) && (sea[x + 1][y] = 1) && (sea[x + 2][y] = 1)
-            && (sea[x + 3][y] = 1);
-      }
+       sea[s.x][s.y] = 1;
+       sea[s.x + 1][s.y] = 1;
+       sea[s.x + 2][s.y] = 1;
+       sea[s.x + 3][s.y] = 1;
+    }
     return s;
 }
 
@@ -412,20 +437,18 @@ void fill_sea (int** sea)
  **/
 void shoot(int** sea)
 {
-   int x = 0;
-   int y = 0;
-   direction d;
+   ship sh;
    unsigned ship_count = 20;
 
    while (true && ship_count != 0) {
         std::cout << "Input coords to shot a ship:" << std::endl;
-        input_coords(x, y, d, true);
-        if (sea[x][y] == 1) {
-            sea[x][y] = 9;
+        input_ship_coords(sh, true);
+        if (sea[sh.x][sh.y] == 1) {
+            sea[sh.x][sh.y] = 9;
             --ship_count;
-            std::cout << "SHIP SHOT!";
+            std::cout << "SHIP SHOT!" << std::endl;
         } else {
-            std::cout << "YOU MISSED!";
+            std::cout << "YOU MISSED!" << std::endl;
         }
         show_sea(sea);
    }
