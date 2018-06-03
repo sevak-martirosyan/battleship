@@ -38,6 +38,7 @@ int** create_sea()
         return sea;
     } catch (std::bad_alloc& bad) {
         std::cerr << "bad_alloc caught: " << bad.what() << std::endl;
+        return nullptr;
     }
 }
 
