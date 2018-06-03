@@ -12,6 +12,14 @@ if ((x)) {\
 
 int** sea = nullptr;
 
+struct ship
+{
+    unsigned x;
+    unsigned y;
+    int l;
+    direction d;
+}
+
 void signal_handler (int sig)
 {
    remove_sea(sea);
@@ -20,6 +28,7 @@ void signal_handler (int sig)
 
 void check_ship_position (int** sea)
 {
+
 }
 
 void check_create_sea (int** tmp_sea)
